@@ -15,10 +15,6 @@ app.use(express.json());
 
 
 
-
-
-
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.slbhc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 
@@ -33,12 +29,18 @@ const client = new MongoClient(uri, {
     }
 });
 
+
+
 async function run() {
     try {
+
+
         await client.connect(); 
         console.log("Connected to MongoDB!");
 
         const tasksCollection = client.db("taskManagerDB").collection("tasks");
+        const expensesCollection = client.db("taskManagerDB").collection("expenses");
+
 
 
 
@@ -122,6 +124,48 @@ async function run() {
                 res.status(500).send({ message: "Internal Server Error" });
             }
         });
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        app.post("/expenses", async (req, res) => {
+            try {
+                const expenseData = req.body;
+                const result = await expensesCollection.insertOne(expenseData);
+                res.send(result);
+            } catch (error) {
+                console.error("Error adding expense:", error);
+                res.status(500).send({ message: "Internal Server Error" });
+            }
+        });
+
+
+
+
+
+
+
+        app.get("/expenses", async (req, res) => {
+            try {
+                const expenses = await expensesCollection.find().toArray();
+                res.send(expenses);
+            } catch (error) {
+                console.error("Error fetching expenses:", error);
+                res.status(500).send({ message: "Internal Server Error" });
+            }
+        });
+        
         
         
         
