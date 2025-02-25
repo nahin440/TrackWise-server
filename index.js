@@ -249,12 +249,11 @@ for (const task of tasks) {
             }
         });
 
-        // app.put('/budget', async (req, res) => {
-            
-        //     try {
-        //         const budgetData = req.body;
-        //         const filter = { email: budgetData.email };
-        //         const update = { $set: budgetData };
+        app.put('/budget', async (req, res) => {
+            try {
+                const budgetData = req.body;
+                const filter = { email: budgetData.email };
+                const update = { $set: budgetData };
 
                 const result = await budgetCollection.updateOne(filter, update);
                 res.send(result);
