@@ -208,19 +208,20 @@ async function run() {
             }
         });
 
-        app.put('/budget', async (req, res) => {
-            try {
-                const budgetData = req.body;
-                const filter = { email: budgetData.email };
-                const update = { $set: budgetData };
+        // app.put('/budget', async (req, res) => {
+            
+        //     try {
+        //         const budgetData = req.body;
+        //         const filter = { email: budgetData.email };
+        //         const update = { $set: budgetData };
 
-                const result = await budgetCollection.updateOne(filter, update);
-                res.send(result);
-            } catch (error) {
-                console.error("Error updating budget:", error);
-                res.status(500).send({ message: "Internal Server Error" });
-            }
-        });
+        //         const result = await budgetCollection.updateOne(filter, update);
+        //         res.send(result);
+        //     } catch (error) {
+        //         console.error("Error updating budget:", error);
+        //         res.status(500).send({ message: "Internal Server Error" });
+        //     }
+        // });
 
 
 
