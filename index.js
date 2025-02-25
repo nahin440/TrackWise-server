@@ -29,7 +29,8 @@ async function run() {
         const tasksCollection = client.db("taskManagerDB").collection("tasks");
         const expensesCollection = client.db("taskManagerDB").collection("expenses");
         const budgetCollection = client.db("taskManagerDB").collection("budgets");
-
+        const reviewsCollection = client.db("taskManagerDB").collection("reviews");
+        
         // Reminder Email Configuration
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -271,6 +272,67 @@ for (const task of tasks) {
                 res.status(500).send({ message: "Internal Server Error" });
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // POST: Add a new review
+    app.post("/reviews", async (req, res) => {
+      try {
+        const reviewData = req.body;
+        const result = await reviewsCollection.insertOne(reviewData);
+        res.send(result);
+      } catch (error) {
+        console.error("Error adding review:", error);
+        res.status(500).send({ message: "Internal Server Error" });
+      }
+    });
+
+    // GET: Fetch all reviews
+    app.get("/reviews", async (req, res) => {
+      try {
+        const reviews = await reviewsCollection.find().toArray();
+        res.send(reviews);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+        res.status(500).send({ message: "Internal Server Error" });
+      }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     } catch (error) {
         console.error("Database connection error:", error);
