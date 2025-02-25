@@ -35,11 +35,13 @@ async function run() {
     try {
 
 
-        await client.connect(); 
+        await client.connect();
         console.log("Connected to MongoDB!");
 
         const tasksCollection = client.db("taskManagerDB").collection("tasks");
         const expensesCollection = client.db("taskManagerDB").collection("expenses");
+        const budgetCollection = client.db("taskManagerDB").collection("budgets");
+
 
 
 
@@ -48,9 +50,9 @@ async function run() {
             const tasks = await tasksCollection.find().toArray();
             res.send(tasks);
         });
-        
 
-    
+
+
 
         app.post("/tasks", async (req, res) => {
             try {
@@ -72,14 +74,14 @@ async function run() {
         app.delete("/tasks/:id", async (req, res) => {
             try {
                 const taskId = req.params.id;
-        
+
                 // Validate ObjectId
                 if (!ObjectId.isValid(taskId)) {
                     return res.status(400).send({ success: false, message: "Invalid task ID" });
                 }
-        
+
                 const result = await tasksCollection.deleteOne({ _id: new ObjectId(taskId) });
-        
+
                 if (result.deletedCount === 1) {
                     res.send({ success: true, message: "Task deleted successfully" });
                 } else {
@@ -90,7 +92,6 @@ async function run() {
                 res.status(500).send({ message: "Internal Server Error" });
             }
         });
-        
 
 
 
@@ -98,22 +99,23 @@ async function run() {
 
 
 
-        
+
+
         app.put("/tasks/:id", async (req, res) => {
             try {
                 const taskId = req.params.id;
-        
+
                 if (!ObjectId.isValid(taskId)) {
                     return res.status(400).send({ success: false, message: "Invalid task ID" });
                 }
-        
+
                 const updatedTask = req.body;
-        
+
                 const result = await tasksCollection.updateOne(
                     { _id: new ObjectId(taskId) },
                     { $set: updatedTask }
                 );
-        
+
                 if (result.modifiedCount === 1) {
                     res.send({ success: true, message: "Task updated successfully" });
                 } else {
@@ -124,7 +126,7 @@ async function run() {
                 res.status(500).send({ message: "Internal Server Error" });
             }
         });
-        
+
 
 
 
@@ -165,11 +167,97 @@ async function run() {
                 res.status(500).send({ message: "Internal Server Error" });
             }
         });
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Budget endpoints
+        app.post('/budget', async (req, res) => {
+            try {
+                const budgetData = req.body;
+                const query = { email: budgetData.email };
+                const update = { $set: budgetData };
+                const options = { upsert: true };
+
+                const result = await budgetCollection.updateOne(query, update, options);
+                res.send(result);
+            } catch (error) {
+                console.error("Error saving budget:", error);
+                res.status(500).send({ message: "Internal Server Error" });
+            }
+        });
+
+        app.put('/budget', async (req, res) => {
+            try {
+                const budgetData = req.body;
+                const filter = { email: budgetData.email };
+                const update = { $set: budgetData };
+
+                const result = await budgetCollection.updateOne(filter, update);
+                res.send(result);
+            } catch (error) {
+                console.error("Error updating budget:", error);
+                res.status(500).send({ message: "Internal Server Error" });
+            }
+        });
+
+
+
+
+
+
+        app.get('/budget', async (req, res) => {
+            try {
+                const email = req.query.email;
+                console.log("Received email:", email);  // Debugging log
+                const result = await budgetCollection.findOne({ email });
+                console.log("Fetched budget:", result);  // Debugging log
+                res.send(result || {});
+            } catch (error) {
+                console.error("Error fetching budget:", error);
+                res.status(500).send({ message: "Internal Server Error" });
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
