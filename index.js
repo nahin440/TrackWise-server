@@ -6,7 +6,10 @@ const cron = require('node-cron');
 const nodemailer = require('nodemailer');
 
 const app = express();
-app.use(cors());
+
+
+app.use(cors({ origin: "https://trackwise-7f2e5.web.app", credentials: true }));
+
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
