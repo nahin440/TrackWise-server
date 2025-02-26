@@ -6,7 +6,7 @@ const cron = require('node-cron');
 const nodemailer = require('nodemailer');
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors());
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
