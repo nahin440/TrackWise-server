@@ -30,7 +30,7 @@ async function run() {
         const expensesCollection = client.db("taskManagerDB").collection("expenses");
         const budgetCollection = client.db("taskManagerDB").collection("budgets");
         const reviewsCollection = client.db("taskManagerDB").collection("reviews");
-        
+
         // Reminder Email Configuration
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -126,7 +126,7 @@ for (const task of tasks) {
                     reminderDate.setHours(hours, minutes, 0, 0);
 
                     // Calculate 10 minutes before reminder time
-                    const reminderThreshold = new Date(reminderDate.getTime() - 10 * 60000);
+                    const reminderThreshold = new Date(reminderDate.getTime() - 60 * 60000);
 
                     if (currentTime >= reminderThreshold && currentTime < reminderDate) {
                         await transporter.sendMail({
